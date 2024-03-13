@@ -158,12 +158,12 @@ class HFCausalLLMBackbone(LLMBackbone, ABC):
         # As a result we explicitly validate that a tokenizer conforms to the expected behavior; if you're reading this
         # line, it's probably because you're adding a new LLM with a different tokenizer behavior. If so, feel free to
         # override this, but make sure to make the appropriate changes in the `datasets.py` and VLM `forward()` logic!
-        assert (self.tokenizer("Testing 123", add_special_tokens=True).input_ids[0] == self.tokenizer.bos_token_id) and (
-            self.tokenizer("Testing 123", add_special_tokens=False).input_ids[0] != self.tokenizer.bos_token_id
-        ), (
-            f"Default Tokenizer of type `{type(self.tokenizer)}` does not automatically prefix inputs with BOS token!\n"
-            "Please read the comment in `base_llm.py` for more information!"
-        )
+        # assert (self.tokenizer("Testing 123", add_special_tokens=True).input_ids[0] == self.tokenizer.bos_token_id) and (
+        #     self.tokenizer("Testing 123", add_special_tokens=False).input_ids[0] != self.tokenizer.bos_token_id
+        # ), (
+        #     f"Default Tokenizer of type `{type(self.tokenizer)}` does not automatically prefix inputs with BOS token!\n"
+        #     "Please read the comment in `base_llm.py` for more information!"
+        # )
 
         # Additionally, explicitly verify that Tokenizer padding_side is set to right for training!
         assert self.tokenizer.padding_side == "right", "Tokenizer `padding_side` is not set to `right`!"

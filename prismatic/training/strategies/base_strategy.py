@@ -140,8 +140,10 @@ class TrainingStrategy(ABC):
             batch_size=self.per_device_batch_size,
             sampler=sampler,
             collate_fn=collator,
-            num_workers=2,
+            num_workers=4,
             worker_init_fn=self.worker_init_fn,
+            pin_memory=True,
+            prefetch_factor=2,
         )
 
         # Max Steps vs. Epochs Computation
@@ -178,6 +180,7 @@ class TrainingStrategy(ABC):
                         dtype=self.mixed_precision_dtype,
                         enabled=self.enable_mixed_precision_training,
                     ):
+
                         output: CausalLMOutputWithPast = self.vlm(
                             input_ids=batch["input_ids"],
                             attention_mask=batch["attention_mask"],

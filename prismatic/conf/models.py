@@ -113,6 +113,8 @@ class LLaVa_v15_Reproduction_7B(ModelConfig):
     finetune_train_strategy: str = "fsdp-full-shard"
 
 
+
+
 @dataclass
 class LLaVa_v15_Reproduction_13B(LLaVa_v15_Reproduction_7B):
     model_id: str = "reproduction-llava-v15+13b"
@@ -128,6 +130,27 @@ class Exp_7B_One_Stage(LLaVa_v15_Reproduction_7B):
     model_id: str = "one-stage+7b"
     arch_specifier: str = "no-align+gelu-mlp"
 
+
+@dataclass
+class Exp_7B_One_Stage_QFormer2_64(LLaVa_v15_Reproduction_7B):
+    model_id: str = "one-stage+7b_qformer2_64"
+    arch_specifier: str = "qformer2_64"
+
+@dataclass
+class Exp_7B_One_Stage_QFormer2_128(LLaVa_v15_Reproduction_7B):
+    model_id: str = "one-stage+7b_qformer2_128"
+    arch_specifier: str = "qformer2_128"
+
+@dataclass
+class Exp_7B_One_Stage_QFormer2_256(LLaVa_v15_Reproduction_7B):
+    model_id: str = "one-stage+7b_qformer2_256"
+    arch_specifier: str = "qformer2_256"
+
+
+@dataclass
+class Exp_7B_One_Stage_QFormer2_32(LLaVa_v15_Reproduction_7B):
+    model_id: str = "one-stage+7b_qformer2_32"
+    arch_specifier: str = "qformer2_32"
 
 @dataclass
 class Exp_13B_One_Stage(LLaVa_v15_Reproduction_13B):
@@ -208,6 +231,21 @@ class Exp_7B_SigLIP_ViT_SO_p14_384px_Resize_Naive(Exp_7B_One_Stage):
     vision_backbone_id: str = "siglip-vit-so400m-384px"
     image_resize_strategy: str = "resize-naive"
 
+
+@dataclass
+class Exp_Qwen7B_SigLIP_ViT_SO_p14_384px_Resize_Naive(Exp_7B_One_Stage):
+    model_id: str = "siglip-384px-resize-naive+qwen-v15-7b"
+    vision_backbone_id: str = "siglip-vit-so400m-384px"
+    image_resize_strategy: str = "resize-naive"
+    finetune_per_device_batch_size: int = 8
+    
+@dataclass
+class Exp_Qwen7B_CLIP_ViT_L_336px_Resize_Naive(Exp_7B_One_Stage):
+    model_id: str = "clip-336px-resize-naive+qwen-v15-7b"
+    vision_backbone_id: str = "clip-vit-l-336px"
+    image_resize_strategy: str = "resize-naive"
+    finetune_per_device_batch_size: int = 8
+    
 
 # Section 4.2D :: 🥞 --> Stacking/Ensembling Visual Representations
 @dataclass
@@ -445,6 +483,13 @@ class ModelRegistry(Enum):
 
     # === Section 4.1 :: Optimization Procedure ===
     EXP_ONE_STAGE_7B = Exp_7B_One_Stage
+
+    EXP_ONE_STAGE_7B_QFORMER2_64 = Exp_7B_One_Stage_QFormer2_64
+    EXP_ONE_STAGE_7B_QFORMER2_32 = Exp_7B_One_Stage_QFormer2_32 
+    EXP_ONE_STAGE_7B_QFORMER2_128 = Exp_7B_One_Stage_QFormer2_128
+    EXP_ONE_STAGE_7B_QFORMER2_256 = Exp_7B_One_Stage_QFormer2_256
+
+
     EXP_ONE_STAGE_13B = Exp_13B_One_Stage
 
     EXP_FULL_FT_MULTI_STAGE = Exp_7B_Full_Finetune_Multi_Stage
@@ -499,6 +544,10 @@ class ModelRegistry(Enum):
     PRISM_DINOSIGLIP_CONTROLLED_13B = Prism_13B_DINOSigLIP_Controlled
     PRISM_DINOSIGLIP_7B = Prism_7B_DINOSigLIP
     PRISM_DINOSIGLIP_13B = Prism_13B_DINOSigLIP
+
+    QWEN_7B = Exp_Qwen7B_SigLIP_ViT_SO_p14_384px_Resize_Naive 
+    QWEN_7B_CLIP = Exp_Qwen7B_CLIP_ViT_L_336px_Resize_Naive
+
 
     @property
     def model_id(self) -> str:

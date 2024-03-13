@@ -1,3 +1,3 @@
-from .base_prompter import PromptBuilder, PurePromptBuilder
+from .base_prompter import PromptBuilder, PurePromptBuilder, Qwen2PromptBuilder
 from .llama2_chat_prompter import LLaMa2ChatPromptBuilder
 from .vicuna_v15_prompter import VicunaV15ChatPromptBuilder

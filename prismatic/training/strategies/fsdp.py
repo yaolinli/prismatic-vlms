@@ -83,6 +83,8 @@ class FSDPStrategy(TrainingStrategy):
             self.fsdp_sharding_strategy = ShardingStrategy.SHARD_GRAD_OP
         elif sharding_strategy == "full-shard":
             self.fsdp_sharding_strategy = ShardingStrategy.FULL_SHARD
+        elif sharding_strategy == "no-shard":
+            self.fsdp_sharding_strategy = ShardingStrategy.NO_SHARD
         else:
             raise ValueError(f"FSDP Sharding Strategy {sharding_strategy} is not supported!")
 

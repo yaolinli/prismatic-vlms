@@ -8,6 +8,7 @@ Notes:
       of the {Model}ForCausalLM API that enables dispatch to the underlying LLM's `generate` utilities (feeding inputs
       through our custom projection shim).
 """
+
 from __future__ import annotations
 
 from functools import partial
@@ -24,7 +25,9 @@ from prismatic.models.backbones.llm.prompting import PromptBuilder
 from prismatic.models.backbones.vision import VisionBackbone
 from prismatic.models.vlms.base_vlm import VLM
 from prismatic.overwatch import initialize_overwatch
-from prismatic.util.nn_utils import FusedMLPProjector, LinearProjector, MLPProjector
+from prismatic.util.nn_utils import FusedMLPProjector, LinearProjector, MLPProjector, QFormerProjector
+import re
+
 
 # Initialize Overwatch =>> Wraps `logging.Logger`
 overwatch = initialize_overwatch(__name__)
@@ -62,6 +65,21 @@ class PrismaticVLM(VLM):
             self.projector = FusedMLPProjector(vision_backbone.embed_dim, llm_backbone.embed_dim)
         elif arch_specifier.endswith("gelu-mlp"):
             self.projector = MLPProjector(vision_backbone.embed_dim, llm_backbone.embed_dim)
+        elif "qformer" in arch_specifier:
+            pattern = r"qformer(\d+)_(\d+)"
+            match = re.search(pattern, arch_specifier)
+            num_hidden_layers = int(match.group(1))
+            num_query_tokens = int(match.group(2))
+            print(f"{num_hidden_layers = }")
+            print(f"{num_query_tokens = }")
+
+            self.projector = QFormerProjector(
+                vision_dim=vision_backbone.embed_dim,
+                llm_dim=llm_backbone.embed_dim,
+                num_qformer_layers=num_hidden_layers,
+                num_query_tokens=num_query_tokens,
+            )
+
         else:
             raise ValueError(f"PrismaticVLM with `{arch_specifier = }` is not supported!")
 
@@ -185,7 +203,7 @@ class PrismaticVLM(VLM):
         assert stage in {"align", "finetune", "full-finetune"}, f"Stage {stage} is not supported!"
 
         # If we're running a `no-align` architecture, we're good!
-        if self.arch_specifier.startswith("no-align"):
+        if self.arch_specifier.startswith("no-align") or "qformer" in self.arch_specifier:
             overwatch.info(
                 f"PrismaticVLM with `{self.arch_specifier = }` does not require pretrained weights!", ctx_level=1
             )

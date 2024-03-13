@@ -8,6 +8,7 @@ and processing scheme. A given dataset variant (e.g., `llava-lightning`) configu
     - Finetune Stage Dataset Components (annotations, images)
     - Dataset Root Directory (Path)
 """
+
 from dataclasses import dataclass
 from enum import Enum, unique
 from pathlib import Path
@@ -42,6 +43,7 @@ class LLaVa_V15_Config(DatasetConfig):
         Path("download/llava-v1.5-instruct/llava_v1_5_mix665k.json"),
         Path("download/llava-v1.5-instruct/"),
     )
+
     dataset_root_dir: Path = Path("data")
 
 
@@ -108,6 +110,64 @@ class LLaVa_LVIS4V_LRV_Config(DatasetConfig):
     )
     dataset_root_dir: Path = Path("/mnt/fsx/skaramcheti/datasets/prismatic-vlms")
 
+@dataclass
+class LLaVa_M3ITML_Config(DatasetConfig):
+    dataset_id: str = "llava-m3it-ml"
+
+    align_stage_components: Tuple[Path, Path] = (
+        Path("download/llava-laion-cc-sbu-558k/chat.json"),
+        Path("download/llava-laion-cc-sbu-558k/"),
+    )
+    finetune_stage_components: Tuple[Path, Path] = (
+        Path("download/llava-v1.5-instruct/llava_v1_5_m3it_mix1078k.json"),
+        Path("download/llava-v1.5-instruct/"),
+    )
+    dataset_root_dir: Path = Path("/home/lilei/prismatic-vlms/data")
+
+
+@dataclass
+class LLaVaNoSGPT_M3ITML_Config(DatasetConfig):
+    dataset_id: str = "llava-m3it-ml-nosharegpt"
+
+    align_stage_components: Tuple[Path, Path] = (
+        Path("download/llava-laion-cc-sbu-558k/chat.json"),
+        Path("download/llava-laion-cc-sbu-558k/"),
+    )
+    finetune_stage_components: Tuple[Path, Path] = (
+        Path("download/llava-v1.5-instruct/llava_v1_5_m3it_mix1038k_nosharegpt.json"),
+        Path("download/llava-v1.5-instruct/"),
+    )
+    dataset_root_dir: Path = Path("/home/lilei/prismatic-vlms/data")
+
+
+@dataclass
+class LLaVaNoSGPTJSONL_M3ITML_Config(DatasetConfig):
+    dataset_id: str = "llava-m3it-ml-nosharegpt-jsonl"
+
+    align_stage_components: Tuple[Path, Path] = (
+        Path("download/llava-laion-cc-sbu-558k/chat.json"),
+        Path("download/llava-laion-cc-sbu-558k/"),
+    )
+    finetune_stage_components: Tuple[Path, Path] = (
+        Path("download/llava-v1.5-instruct/llava_v1_5_m3it_mix1038k_nosharegpt.jsonl"),
+        Path("download/llava-v1.5-instruct/"),
+    )
+    dataset_root_dir: Path = Path("/home/lilei/prismatic-vlms/data")
+
+@dataclass
+class M3IT_Config(DatasetConfig):
+    dataset_id: str = "m3it_ml"
+
+    align_stage_components: Tuple[Path, Path] = (
+        Path("download/llava-laion-cc-sbu-558k/chat.json"),
+        Path("download/llava-laion-cc-sbu-558k/"),
+    )
+    finetune_stage_components: Tuple[Path, Path] = (
+        Path("m3it_ml/m3it_ml.json"),
+        Path("m3it_ml/images"),
+    )
+    dataset_root_dir: Path = Path("/home/lilei/prismatic-vlms/data")
+
 
 # === Define a Dataset Registry Enum for Reference & Validation =>> all *new* datasets must be added here! ===
 @unique
@@ -121,6 +181,10 @@ class DatasetRegistry(Enum):
     LLAVA_LRV = LLaVa_LRV_Config
 
     LLAVA_LVIS4V_LRV = LLaVa_LVIS4V_LRV_Config
+    M3IT = M3IT_Config
+    LLAVA_M3IT = LLaVa_M3ITML_Config
+    LLAVA_M3IT_NOSHAREGPT = LLaVaNoSGPT_M3ITML_Config
+    LLAVA_M3IT_NOSHAREGPT_JSONL = LLaVaNoSGPTJSONL_M3ITML_Config
 
     @property
     def dataset_id(self) -> str:

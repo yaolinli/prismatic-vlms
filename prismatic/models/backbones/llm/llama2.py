@@ -7,7 +7,7 @@ from typing import Optional, Type
 
 import torch
 from torch import nn as nn
-from transformers import LlamaForCausalLM
+from transformers import LlamaForCausalLM, Qwen2ForCausalLM
 from transformers.models.llama.modeling_llama import LlamaDecoderLayer
 
 from prismatic.models.backbones.llm.base_llm import HFCausalLLMBackbone
@@ -47,6 +47,7 @@ LLAMA2_MODELS = {
     "vicuna-v15-13b": {
         "llm_family": "llama2", "llm_cls": LlamaForCausalLM, "hf_hub_path": "lmsys/vicuna-13b-v1.5"
     },
+
 }
 # fmt: on
 

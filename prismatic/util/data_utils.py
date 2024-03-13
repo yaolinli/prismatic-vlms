@@ -3,6 +3,7 @@ data_utils.py
 
 General utilities and classes for facilitating data loading and collation.
 """
+
 from dataclasses import dataclass
 from typing import Dict, Sequence, Tuple
 
@@ -69,10 +70,14 @@ class PaddedCollatorForLanguageModeling:
         else:
             raise ValueError(f"Unsupported `pixel_values` type = {type(pixel_values)}")
 
-        return dict(
+        ret = dict(
             pixel_values=pixel_values,
             input_ids=input_ids,
             attention_mask=attention_mask,
             labels=labels,
             multimodal_indices=multimodal_indices,
         )
+        # for k, v in ret.items():
+        # print(k, v.size(), v.device, v.dtype)
+
+        return ret

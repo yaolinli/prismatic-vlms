@@ -158,6 +158,24 @@ class Exp_13B_One_Stage(LLaVa_v15_Reproduction_13B):
     arch_specifier: str = "no-align+gelu-mlp"
 
 
+@dataclass
+class Exp_7B_One_Stage_CAbstractor_64(LLaVa_v15_Reproduction_7B):
+    model_id: str = "one-stage+7b_cabstractor_64"
+    arch_specifier: str = "cabstractor_64"
+    
+    
+@dataclass
+class Exp_7B_One_Stage_CAbstractor_144(LLaVa_v15_Reproduction_7B):
+    model_id: str = "one-stage+7b_cabstractor_144"
+    arch_specifier: str = "cabstractor_144"
+
+
+@dataclass
+class Exp_7B_One_Stage_CAbstractor_256(LLaVa_v15_Reproduction_7B):
+    model_id: str = "one-stage+7b_cabstractor_256"
+    arch_specifier: str = "cabstractor_256"
+
+
 # Section 4.1B :: 🛠️ --> Full Finetuning through Visual Backbones
 #   =>> Note :: Run with `--stage full-finetune`
 @dataclass

@@ -166,6 +166,7 @@ class HFCausalLLMBackbone(LLMBackbone, ABC):
         # )
 
         # Additionally, explicitly verify that Tokenizer padding_side is set to right for training!
+        self.tokenizer.padding_side = "right"
         assert self.tokenizer.padding_side == "right", "Tokenizer `padding_side` is not set to `right`!"
 
     def get_fsdp_wrapping_policy(self) -> Callable:

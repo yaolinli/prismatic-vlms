@@ -145,3 +145,7 @@ dmypy.json
 # Caches and Datasets
 cache/
 data/
+official_ckpts/
+results/
+checkpoints/
+runs/

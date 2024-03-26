@@ -28,6 +28,9 @@ that bundles together 11 different battle-tested vision-and-language benchmarks 
 This repository was built using Python 3.10, but should be backwards compatible with any Python >= 3.8. We require
 PyTorch 2.1 or greater installation instructions [can be found here](https://pytorch.org/get-started/locally/). This 
 repository was developed and has been thoroughly tested with PyTorch 2.1.0, Torchvision 0.16.0, and Flash-Attention 2.3.3.
+```
+pip install torch==2.1.0 torchvision==0.16.0 torchaudio==2.1.0 --index-url https://download.pytorch.org/whl/cu118
+```
 
 Once PyTorch has been properly installed, you can install this package locally via an editable installation (or via
 `pip install git+https://github.com/TRI-ML/prismatic-vlms`):

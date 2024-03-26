@@ -17,7 +17,7 @@ from typing import Dict, List, Tuple, Type
 import torch
 from PIL import Image
 from torch.utils.data import Dataset
-from transformers import LlamaTokenizerFast, PreTrainedTokenizerBase, Qwen2TokenizerFast
+from transformers import LlamaTokenizerFast, PreTrainedTokenizerBase #, Qwen2TokenizerFast
 
 from prismatic.models.backbones.llm.prompting import PromptBuilder
 from prismatic.models.backbones.vision import ImageTransform

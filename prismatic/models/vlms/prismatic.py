@@ -25,7 +25,7 @@ from prismatic.models.backbones.llm.prompting import PromptBuilder
 from prismatic.models.backbones.vision import VisionBackbone
 from prismatic.models.vlms.base_vlm import VLM
 from prismatic.overwatch import initialize_overwatch
-from prismatic.util.nn_utils import FusedMLPProjector, LinearProjector, MLPProjector, QFormerProjector
+from prismatic.util.nn_utils import FusedMLPProjector, LinearProjector, MLPProjector, QFormerProjector, CAbstractorProjector
 import re
 
 
@@ -79,7 +79,19 @@ class PrismaticVLM(VLM):
                 num_qformer_layers=num_hidden_layers,
                 num_query_tokens=num_query_tokens,
             )
+        elif "cabstractor" in arch_specifier:
+            pattern = r"cabstractor_(\d+)"
+            match = re.search(pattern, arch_specifier)
+            num_query_tokens = int(match.group(1))
+            print(f"For C-Abastractor: {num_query_tokens = }")
 
+            self.projector = CAbstractorProjector(
+                vision_dim=vision_backbone.embed_dim,
+                llm_dim=llm_backbone.embed_dim,
+                num_query_tokens=num_query_tokens,
+                depth=3,  # the layer num of each ResNet Block which is same to the honeybee paper.
+                mlp_depth=2,  # the layer num of the MLP Block that mapping projector dim to llm dim. It is same to the honeybee paper.
+            )
         else:
             raise ValueError(f"PrismaticVLM with `{arch_specifier = }` is not supported!")
 

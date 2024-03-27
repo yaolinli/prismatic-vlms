@@ -32,11 +32,11 @@ class HoneybeeVisualProjectorConfig(PretrainedConfig):
         initializer_range: float = 0.02,
         layer_norm_eps: float = 1e-6,  #
         encoder_hidden_size: int = 1024,  # This will be overwritten by vision_model's hidden_size
-        depth: int = 1, # the layer num of ResNet Block
+        depth: int = 1,  # the layer num of ResNet Block
         mlp_depth: int = 2,  # the layer num of the MLP Block that mapping projector dim to llm dim
         num_queries: int = 144,
-        pos_emb=False,
-        feature_layer_index=-1,  # vision feature layer index; -1: last layer
+        pos_emb=True,
+        feature_layer_index=-2,  # vision feature layer index; -1: last layer
         num_eos_tokens=0,
         use_cls=True,
         prenorm=False,

@@ -17,7 +17,7 @@ from typing import Dict, List, Tuple, Type
 import torch
 from PIL import Image
 from torch.utils.data import Dataset
-from transformers import LlamaTokenizerFast, PreTrainedTokenizerBase #, Qwen2TokenizerFast
+from transformers import LlamaTokenizerFast, PreTrainedTokenizerBase, Qwen2TokenizerFast
 
 from prismatic.models.backbones.llm.prompting import PromptBuilder
 from prismatic.models.backbones.vision import ImageTransform
@@ -111,7 +111,7 @@ class FinetuneDataset(Dataset[Dict[str, torch.Tensor]]):
         image_transform: ImageTransform,
         tokenizer: PreTrainedTokenizerBase,
         prompt_builder_fn: Type[PromptBuilder],
-        max_length: int = 4096,
+        max_length: int = 1024,
     ) -> None:
         super().__init__()
         self.instruct_json, self.image_dir = instruct_json, image_dir
@@ -225,7 +225,7 @@ def get_hf_datasets(
     image_transform: ImageTransform,
     tokenizer: PreTrainedTokenizerBase,
     prompt_builder_fn: Type[PromptBuilder],
-    max_length: int = 4096,
+    max_length: int = 1024,
 ):
     print("loading dataset...")
     print("instruct_json", instruct_json)

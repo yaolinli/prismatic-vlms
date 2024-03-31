@@ -30,7 +30,7 @@ def get_dataset_and_collator_hf(
     prompt_builder_fn: Type[PromptBuilder],
     default_image_resolution: Tuple[int, int, int],
     padding_side: str = "right",
-    max_length=4096
+    max_length=1024
 ) -> Tuple[Dataset, PaddedCollatorForLanguageModeling]:
     dataset_cls = DATASET_INITIALIZER[stage]
     dataset_root_dir = dataset_cfg.dataset_root_dir
@@ -82,7 +82,7 @@ def get_dataset_and_collator(
     prompt_builder_fn: Type[PromptBuilder],
     default_image_resolution: Tuple[int, int, int],
     padding_side: str = "right",
-    max_length=4096
+    max_length=1024
 ) -> Tuple[Dataset, PaddedCollatorForLanguageModeling]:
     dataset_cls = DATASET_INITIALIZER[stage]
     dataset_root_dir = dataset_cfg.dataset_root_dir

@@ -1,5 +1,19 @@
 # Prismatic VLMs
 
+## Update by yll
+train with Qwen-v15-0.5b
+```
+gpu_id=0,1
+model_name='qwen-v15-0.5b-chat' # "qwen-v15-1.8b-chat"
+CUDA_VISIBLE_DEVICES=$gpu_id torchrun --standalone --nnodes 1 --nproc-per-node 2 scripts/pretrain.py \
+  --model.type "one-stage+7b" \
+  --model.model_id "one-stage+"${model_name} \
+  --model.vision_backbone_id "clip-vit-l-336px" \
+  --model.image_resize_strategy "letterbox" \
+  --model.llm_backbone_id $model_name  --run_id "one-stage+"${model_name} --model.finetune_per_device_batch_size 4
+```
+
+
 [![arXiv](https://img.shields.io/badge/arXiv-2402.07865-df2a2a.svg?style=for-the-badge)](https://arxiv.org/abs/2402.07865)
 [![PyTorch](https://img.shields.io/badge/PyTorch-2.1.0-EE4C2C.svg?style=for-the-badge&logo=pytorch)](https://pytorch.org/get-started/locally/)
 [![Python](https://img.shields.io/badge/python-3.10-blue?style=for-the-badge)](https://www.python.org)

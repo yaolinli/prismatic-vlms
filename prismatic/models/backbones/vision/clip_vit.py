@@ -7,7 +7,7 @@ from prismatic.models.backbones.vision.base_vision import TimmViTBackbone
 CLIP_VISION_BACKBONES = {
     "clip-vit-b": "vit_base_patch16_clip_224.openai",
     "clip-vit-l": "vit_large_patch14_clip_224.openai",
-    "clip-vit-l-336px": "vit_large_patch14_clip_336.openai",
+    "clip-vit-l-336px": "/home/yaolinli/code/prismatic-vlms/prismatic-vlms/official_ckpts/vit_large_patch14_clip_336.openai",
 }
 
 

@@ -18,6 +18,7 @@ import torch.nn as nn
 import torchvision.transforms.functional as TVF
 from PIL.Image import Image
 from timm.models.vision_transformer import Block, VisionTransformer
+from open_clip import create_model_from_pretrained
 from torch.distributed.fsdp.wrap import _module_wrap_policy, _or_policy, transformer_auto_wrap_policy
 from torchvision.transforms import Compose, Resize
 
@@ -106,7 +107,10 @@ class TimmViTBackbone(VisionBackbone, ABC):
 
         # Initialize Featurizer (ViT) by downloading from HF / TIMM Hub if necessary
         if self.override_act_layer is None:
-            self.featurizer: VisionTransformer = timm.create_model(
+            if "siglip-vit-so400m-384px" in self.timm_path_or_url or "ViT-SO400M-14-SigLIP-384" in self.timm_path_or_url:
+                self.featurizer: VisionTransformer = create_model_from_pretrained(self.timm_path_or_url)[0].visual.trunk
+            else:
+                self.featurizer: VisionTransformer = timm.create_model(
                 self.timm_path_or_url, pretrained=True, num_classes=0, img_size=self.default_image_size
             )
         else:

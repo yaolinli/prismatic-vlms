@@ -1,7 +1,24 @@
 # Prismatic VLMs
 
 ## Update by yll
-train with Qwen-v15-0.5b
+- **train with Phi-2**
+
+set `--model.vision_backbone_id siglip-vit-so400m-384px` to use the better vision backbone
+
+```
+gpu_id=2,3
+model_name='phi2'
+CUDA_VISIBLE_DEVICES=$gpu_id torchrun --standalone --nnodes 1 --nproc-per-node 2 scripts/pretrain.py \
+  --model.type "one-stage+7b" \
+  --model.model_id "one-stage+"${model_name} \
+  --model.vision_backbone_id "clip-vit-l-336px" \
+  --model.image_resize_strategy "letterbox" \
+  --model.llm_backbone_id $model_name  --run_id "one-stage+"${model_name} --model.finetune_per_device_batch_size 16
+
+```
+
+
+- **train with Qwen-v15-0.5b**
 ```
 gpu_id=0,1
 model_name='qwen-v15-0.5b-chat' # "qwen-v15-1.8b-chat"

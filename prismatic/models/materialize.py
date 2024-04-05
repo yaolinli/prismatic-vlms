@@ -8,7 +8,7 @@ from typing import Optional, Tuple
 
 from transformers import PreTrainedTokenizerBase
 
-from prismatic.models.backbones.llm import LLaMa2LLMBackbone, LLMBackbone, Qwen2LLMBackbone
+from prismatic.models.backbones.llm import LLaMa2LLMBackbone, LLMBackbone, Qwen2LLMBackbone, Phi2LLMBackbone
 from prismatic.models.backbones.vision import (
     CLIPViTBackbone,
     DinoCLIPViTBackbone,
@@ -69,6 +69,9 @@ LLM_BACKBONES = {
     "qwen-v15-1.8b-chat": {"cls": Qwen2LLMBackbone, "kwargs": {}},
     "qwen-v15-7b": {"cls": Qwen2LLMBackbone, "kwargs": {}},
     "qwen-v15-14b": {"cls": Qwen2LLMBackbone, "kwargs": {}},
+    
+    # phi backbones
+    "phi2": {"cls": Phi2LLMBackbone, "kwargs": {}},
 }
 
 # fmt: on

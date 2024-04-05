@@ -17,7 +17,7 @@ from typing import Dict, List, Tuple, Type
 import torch
 from PIL import Image
 from torch.utils.data import Dataset
-from transformers import LlamaTokenizerFast, PreTrainedTokenizerBase, Qwen2TokenizerFast
+from transformers import LlamaTokenizerFast, PreTrainedTokenizerBase, Qwen2TokenizerFast, CodeGenTokenizerFast
 
 from prismatic.models.backbones.llm.prompting import PromptBuilder
 from prismatic.models.backbones.vision import ImageTransform
@@ -156,6 +156,8 @@ class FinetuneDataset(Dataset[Dict[str, torch.Tensor]]):
             if isinstance(self.tokenizer, LlamaTokenizerFast):
                 msg = msg.rstrip()
             elif isinstance(self.tokenizer, Qwen2TokenizerFast):
+                msg = msg.rstrip()
+            elif isinstance(self.tokenizer, CodeGenTokenizerFast):
                 msg = msg.rstrip()
             else:
                 raise ValueError(f"Tokenizer of type `{type(self.tokenizer)}` is not explicitly handled!")

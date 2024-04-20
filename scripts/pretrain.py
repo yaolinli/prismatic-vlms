@@ -161,7 +161,7 @@ def pretrain(cfg: PretrainConfig) -> None:
     overwatch.info(f"Instantiating PrismaticVLM `{model_id}` for Training Stage = `{cfg.stage}`")
     vlm = get_vlm(
         model_id,
-        cfg.model.arch_specifier,
+        cfg.model.arch_specifier.replace("no-align+", ""),
         vision_backbone,
         llm_backbone,
         enable_mixed_precision_training=cfg.model.enable_mixed_precision_training,
@@ -172,8 +172,9 @@ def pretrain(cfg: PretrainConfig) -> None:
     vlm.freeze_backbones(cfg.stage)
 
     # Load Weights from Checkpoint (depends on stage, config)
-    overwatch.info(f"Invoking `VLM.load_checkpoint()` for `{model_id}` => Training Stage: `{cfg.stage}`")
-    vlm.load_from_checkpoint(cfg.stage, run_dir, pretrained_checkpoint=cfg.pretrained_checkpoint)
+    if "no-align+" not in cfg.model.arch_specifier:
+        overwatch.info(f"Invoking `VLM.load_checkpoint()` for `{model_id}` => Training Stage: `{cfg.stage}`")
+        vlm.load_from_checkpoint(cfg.stage, run_dir, pretrained_checkpoint=cfg.pretrained_checkpoint)
 
     # Get Dataset for Specified Stage
     overwatch.info(f"Creating Dataset `{cfg.dataset.dataset_id}` => Stage: `{cfg.stage}`")

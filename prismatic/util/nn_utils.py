@@ -19,6 +19,43 @@ from functools import partial
 from transformers.configuration_utils import PretrainedConfig
 
 
+
+
+class AvgPoolProjector(nn.Module):
+    def __init__(
+        self,
+        layer_num: int = 2,
+        query_num: int = 144,
+        mm_hidden_size: int = 1024,
+        llm_hidden_size: int = 4096,
+    ):
+        super().__init__()
+        self.layer_num = layer_num
+        self.query_num = query_num
+        self.mm_hidden_size = mm_hidden_size
+        self.llm_hidden_size = llm_hidden_size
+        self.build_net()
+        
+    def build_net(self):
+        hw = int(self.query_num ** 0.5)
+        sampler = nn.AdaptiveAvgPool2d((hw, hw))
+        self.sampler = sampler
+        modules = [nn.Linear(self.mm_hidden_size, self.llm_hidden_size)]
+        for _ in range(1, self.layer_num):
+            modules.append(nn.GELU())
+            modules.append(nn.Linear(self.llm_hidden_size, self.llm_hidden_size))
+        self.mlp_projector = nn.Sequential(*modules)
+        
+    def forward(self, visual_feat: torch.Tensor) -> torch.Tensor:
+        batch_size, seq_len, h_dim = visual_feat.shape  # 576
+        hw = int(seq_len ** 0.5)  # 24
+        shaped_visual_feat = rearrange(visual_feat, "b (h w) d -> b d h w", h=hw, w=hw)  # torch.Size([64, 1024, 24, 24])
+        pooled_visual_feat = self.sampler(shaped_visual_feat)  # torch.Size([64, 1024, 12, 12])
+        reshaped_visual_feat = rearrange(pooled_visual_feat, "b d h w -> b (h w) d")  # [64, 144, 1024]
+        output_feat = self.mlp_projector(reshaped_visual_feat)  # [64, 144, 4096])
+        return output_feat
+        
+
 class HoneybeeVisualProjectorConfig(PretrainedConfig):
     model_type = "mllm_visual_projector"
     def __init__(

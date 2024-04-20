@@ -25,7 +25,7 @@ from prismatic.models.backbones.llm.prompting import PromptBuilder
 from prismatic.models.backbones.vision import VisionBackbone
 from prismatic.models.vlms.base_vlm import VLM
 from prismatic.overwatch import initialize_overwatch
-from prismatic.util.nn_utils import FusedMLPProjector, LinearProjector, MLPProjector, QFormerProjector, CAbstractorProjector
+from prismatic.util.nn_utils import FusedMLPProjector, LinearProjector, MLPProjector, QFormerProjector, CAbstractorProjector, AvgPoolProjector
 import re
 
 
@@ -58,7 +58,7 @@ class PrismaticVLM(VLM):
         torch.manual_seed(vision_backbone.embed_dim)
 
         # Initialize Projection (Adapter) based on `arch_specifier`
-        self.arch_specifier = arch_specifier
+        self.arch_specifier = arch_specifier.replace("no-align+", "")
         if arch_specifier == "linear":
             self.projector = LinearProjector(vision_backbone.embed_dim, llm_backbone.embed_dim)
         elif arch_specifier.endswith("fused-gelu-mlp"):
@@ -92,6 +92,12 @@ class PrismaticVLM(VLM):
                 depth=3,  # the layer num of each ResNet Block which is same to the honeybee paper.
                 mlp_depth=2,  # the layer num of the MLP Block that mapping projector dim to llm dim. It is same to the honeybee paper.
             )
+        elif "avgpool" in arch_specifier:
+            match = re.match(r'avgpool(\d+)_(\d+)', arch_specifier)
+            num_layers = int(match.group(1))
+            num_query_tokens = int(match.group(2))
+            print("For AvgPool: {} img tokens with {} layer".format(num_layers, num_query_tokens))
+            self.projector = AvgPoolProjector(layer_num=num_layers, query_num=num_query_tokens, mm_hidden_size=vision_backbone.embed_dim, llm_hidden_size=llm_backbone.embed_dim)
         else:
             raise ValueError(f"PrismaticVLM with `{arch_specifier = }` is not supported!")
 
@@ -215,7 +221,8 @@ class PrismaticVLM(VLM):
         assert stage in {"align", "finetune", "full-finetune"}, f"Stage {stage} is not supported!"
 
         # If we're running a `no-align` architecture, we're good!
-        if self.arch_specifier.startswith("no-align") or "qformer" in self.arch_specifier:
+        # if self.arch_specifier.startswith("no-align") or "qformer" in self.arch_specifier:
+        if "no-align" in self.arch_specifier:
             overwatch.info(
                 f"PrismaticVLM with `{self.arch_specifier = }` does not require pretrained weights!", ctx_level=1
             )
@@ -238,6 +245,8 @@ class PrismaticVLM(VLM):
             return
 
         # [Contract] If no `pretrained_checkpoint`, assume `align` lives in the run directory; string substitution!
+        print("run_dir", run_dir)
+        print()
         model, scale, _, seed = run_dir.name.split("+")
         align_dirs = [
             d

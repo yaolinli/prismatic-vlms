@@ -25,7 +25,7 @@ from prismatic.models.backbones.llm.prompting import PromptBuilder
 from prismatic.models.backbones.vision import VisionBackbone
 from prismatic.models.vlms.base_vlm import VLM
 from prismatic.overwatch import initialize_overwatch
-from prismatic.util.nn_utils import FusedMLPProjector, LinearProjector, MLPProjector, QFormerProjector, CAbstractorProjector, AvgPoolProjector
+from prismatic.util.nn_utils import FusedMLPProjector, LinearProjector, MLPProjector, QFormerProjector, CAbstractorProjector, AvgPoolProjector, MaxPoolProjector
 import re
 
 
@@ -59,6 +59,7 @@ class PrismaticVLM(VLM):
 
         # Initialize Projection (Adapter) based on `arch_specifier`
         self.arch_specifier = arch_specifier.replace("no-align+", "")
+        arch_specifier = arch_specifier.replace("no-align+", "")
         if arch_specifier == "linear":
             self.projector = LinearProjector(vision_backbone.embed_dim, llm_backbone.embed_dim)
         elif arch_specifier.endswith("fused-gelu-mlp"):
@@ -70,8 +71,8 @@ class PrismaticVLM(VLM):
             match = re.search(pattern, arch_specifier)
             num_hidden_layers = int(match.group(1))
             num_query_tokens = int(match.group(2))
-            print(f"{num_hidden_layers = }")
-            print(f"{num_query_tokens = }")
+            print(f"{num_hidden_layers}")
+            print(f"{num_query_tokens}")
 
             self.projector = QFormerProjector(
                 vision_dim=vision_backbone.embed_dim,
@@ -83,12 +84,19 @@ class PrismaticVLM(VLM):
             pattern = r"cabstractor_(\d+)"
             match = re.search(pattern, arch_specifier)
             num_query_tokens = int(match.group(1))
-            print(f"For C-Abastractor: {num_query_tokens = }")
-
+            print(f"For C-Abastractor: {num_query_tokens}")
+            
+            if self.vision_backbone.num_patches:
+                input_vision_tokens = self.vision_backbone.num_patches
+            else:
+                input_vision_tokens = (vision_backbone.default_image_size // 14)**2
+            print(f"Input vision token num: {input_vision_tokens}")
+            
             self.projector = CAbstractorProjector(
                 vision_dim=vision_backbone.embed_dim,
                 llm_dim=llm_backbone.embed_dim,
                 num_query_tokens=num_query_tokens,
+                num_input_tokens=input_vision_tokens,  # default: 576
                 depth=3,  # the layer num of each ResNet Block which is same to the honeybee paper.
                 mlp_depth=2,  # the layer num of the MLP Block that mapping projector dim to llm dim. It is same to the honeybee paper.
             )
@@ -98,6 +106,12 @@ class PrismaticVLM(VLM):
             num_query_tokens = int(match.group(2))
             print("For AvgPool: {} img tokens with {} layer".format(num_layers, num_query_tokens))
             self.projector = AvgPoolProjector(layer_num=num_layers, query_num=num_query_tokens, mm_hidden_size=vision_backbone.embed_dim, llm_hidden_size=llm_backbone.embed_dim)
+        elif "maxpool" in arch_specifier:
+            match = re.match(r'maxpool(\d+)_(\d+)', arch_specifier)
+            num_layers = int(match.group(1))
+            num_query_tokens = int(match.group(2))
+            print("For MaxPool: {} img tokens with {} layer".format(num_layers, num_query_tokens))
+            self.projector = MaxPoolProjector(layer_num=num_layers, query_num=num_query_tokens, mm_hidden_size=vision_backbone.embed_dim, llm_hidden_size=llm_backbone.embed_dim)
         else:
             raise ValueError(f"PrismaticVLM with `{arch_specifier = }` is not supported!")
 

@@ -208,3 +208,4 @@ class TimmViTBackbone(VisionBackbone, ABC):
     @property
     def half_precision_dtype(self) -> torch.dtype:
         return self.dtype
+        # return torch.bfloat16

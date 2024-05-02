@@ -19,7 +19,40 @@ from functools import partial
 from transformers.configuration_utils import PretrainedConfig
 
 
-
+class MaxPoolProjector(nn.Module):
+    def __init__(
+        self,
+        layer_num: int = 2,
+        query_num: int = 144,
+        mm_hidden_size: int = 1024,
+        llm_hidden_size: int = 4096,
+    ):
+        super().__init__()
+        self.layer_num = layer_num
+        self.query_num = query_num
+        self.mm_hidden_size = mm_hidden_size
+        self.llm_hidden_size = llm_hidden_size
+        self.build_net()
+        
+    def build_net(self):
+        hw = int(self.query_num ** 0.5)
+        sampler = nn.AdaptiveMaxPool2d((hw, hw))
+        self.sampler = sampler
+        modules = [nn.Linear(self.mm_hidden_size, self.llm_hidden_size)]
+        for _ in range(1, self.layer_num):
+            modules.append(nn.GELU())
+            modules.append(nn.Linear(self.llm_hidden_size, self.llm_hidden_size))
+        self.mlp_projector = nn.Sequential(*modules)
+        
+    def forward(self, visual_feat: torch.Tensor) -> torch.Tensor:
+        batch_size, seq_len, h_dim = visual_feat.shape  # 576
+        hw = int(seq_len ** 0.5)  # 24
+        shaped_visual_feat = rearrange(visual_feat, "b (h w) d -> b d h w", h=hw, w=hw)  # torch.Size([64, 1024, 24, 24])
+        pooled_visual_feat = self.sampler(shaped_visual_feat)  # torch.Size([64, 1024, 12, 12])
+        reshaped_visual_feat = rearrange(pooled_visual_feat, "b d h w -> b (h w) d")  # [64, 144, 1024]
+        output_feat = self.mlp_projector(reshaped_visual_feat)  # [64, 144, 4096])
+        return output_feat
+    
 
 class AvgPoolProjector(nn.Module):
     def __init__(
@@ -179,9 +212,10 @@ class Projector(nn.Module):
             x = self.prenorm(x)
 
         if self.pos_emb is not None:
-            x += self.pos_emb
+            x = x.to(self.pos_emb.dtype)
+            pos_x = x + self.pos_emb
 
-        x = self._forward(x)  # (B, L, output_hidden_size)
+        x = self._forward(pos_x)  # (B, L, output_hidden_size)
 
         B = x.size(0)
         if self.eos_tokens is not None:
@@ -246,6 +280,7 @@ class CAbstractorProjector(nn.Module):
         vision_dim: int,
         llm_dim: int,
         num_query_tokens: int = 64,
+        num_input_tokens: int = 576,  # input vision tokens: e.g. 336px -> 576 tokens; 386px -> 729 tokens
         depth: int = 3,  # the layer num of ResNet Block
         mlp_depth: int = 2,  # the layer num of the MLP Block that mapping projector dim to llm dim
     ) -> None:
@@ -255,7 +290,8 @@ class CAbstractorProjector(nn.Module):
         # mlp_depth: int = 2,
         # num_queries: int = 144,
         CAbstractor_config = HoneybeeVisualProjectorConfig(projector_type='c-abstractor', encoder_hidden_size=vision_dim, depth=depth, mlp_depth=mlp_depth, num_queries=num_query_tokens)
-        self.projector = CAbstractor(CAbstractor_config, output_hidden_size=llm_dim)
+        self.projector = CAbstractor(CAbstractor_config, output_hidden_size=llm_dim, num_input_tokens=num_input_tokens)
+        
 
     def forward(self, img_patches: torch.Tensor) -> torch.Tensor:
         # img_patches: [16, 576, 1024]

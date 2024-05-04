@@ -44,7 +44,7 @@ class LLaVa_V15_Config(DatasetConfig):
         Path("download/llava-v1.5-instruct/"),
     )
 
-    dataset_root_dir: Path = Path("data")
+    dataset_root_dir: Path = Path("/home/v-shuhuairen/mycontainer/data")
 
 
 # [Multimodal-Only] LLava-v15 WITHOUT the Language-Only ShareGPT Data (No Co-Training)

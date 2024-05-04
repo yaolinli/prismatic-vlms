@@ -23,29 +23,29 @@ from prismatic.models.backbones.llm.prompting import (
 LLAMA2_MODELS = {
     # === Pure Meta LLaMa-2 (non-instruct/chat-tuned) Models ===
     "llama2-7b-pure": {
-        "llm_family": "llama2", "llm_cls": LlamaForCausalLM, "hf_hub_path": "/home/yaolinli/code/prismatic-vlms/prismatic-vlms/official_ckpts/Llama-2-7b-hf"
+        "llm_family": "llama2", "llm_cls": LlamaForCausalLM, "hf_hub_path": "/home/v-shuhuairen/mycontainer/ckpt/official_ckpts/Llama-2-7b-hf"
     },
 
     "llama2-13b-pure": {
-        "llm_family": "llama2", "llm_cls": LlamaForCausalLM, "hf_hub_path": "/home/yaolinli/code/prismatic-vlms/prismatic-vlms/official_ckpts/Llama-2-13b-hf"
+        "llm_family": "llama2", "llm_cls": LlamaForCausalLM, "hf_hub_path": "/home/v-shuhuairen/mycontainer/ckpt/official_ckpts/Llama-2-13b-hf"
     },
 
     # === Meta LLaMa-2 Chat Models ===
     "llama2-7b-chat": {
-        "llm_family": "llama2", "llm_cls": LlamaForCausalLM, "hf_hub_path": "/home/yaolinli/code/prismatic-vlms/prismatic-vlms/official_ckpts/Llama-2-7b-chat-hf"
+        "llm_family": "llama2", "llm_cls": LlamaForCausalLM, "hf_hub_path": "/home/v-shuhuairen/mycontainer/ckpt/official_ckpts/Llama-2-7b-chat-hf"
     },
 
     "llama2-13b-chat": {
-        "llm_family": "llama2", "llm_cls": LlamaForCausalLM, "hf_hub_path": "/home/yaolinli/code/prismatic-vlms/prismatic-vlms/official_ckpts/Llama-2-13b-chat-hf"
+        "llm_family": "llama2", "llm_cls": LlamaForCausalLM, "hf_hub_path": "/home/v-shuhuairen/mycontainer/ckpt/official_ckpts/Llama-2-13b-chat-hf"
     },
 
     # === Vicuna v1.5 Chat Models ===
     "vicuna-v15-7b": {
-        "llm_family": "llama2", "llm_cls": LlamaForCausalLM, "hf_hub_path": "/home/yaolinli/code/prismatic-vlms/prismatic-vlms/official_ckpts/vicuna-7b-v1.5"
+        "llm_family": "llama2", "llm_cls": LlamaForCausalLM, "hf_hub_path": "/home/v-shuhuairen/mycontainer/ckpt/official_ckpts/vicuna-7b-v1.5"
     },
 
     "vicuna-v15-13b": {
-        "llm_family": "llama2", "llm_cls": LlamaForCausalLM, "hf_hub_path": "/home/yaolinli/code/prismatic-vlms/prismatic-vlms/official_ckpts/vicuna-13b-v1.5"
+        "llm_family": "llama2", "llm_cls": LlamaForCausalLM, "hf_hub_path": "/home/v-shuhuairen/mycontainer/ckpt/official_ckpts/vicuna-13b-v1.5"
     },
 
 }

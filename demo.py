@@ -13,7 +13,7 @@ device = torch.device(f"cuda:{gpu_id}") if torch.cuda.is_available() else torch.
 
 # Load a pretrained VLM (either local path, or ID to auto-download from the HF Hub) 
 model_id = "prism-dinosiglip+7b"
-model_dir = "/home/yaolinli/code/prismatic-vlms/prismatic-vlms/official_ckpts/prismatic-vlms/prism-dinosiglip+7b"
+model_dir = "/home/v-shuhuairen/mycontainer/ckpt/official_ckpts/prismatic-vlms/prism-dinosiglip+7b"
 vlm = load(model_dir, hf_token=hf_token)
 vlm.to(device, dtype=torch.bfloat16)
 

@@ -5,9 +5,9 @@ from prismatic.models.backbones.vision.base_vision import TimmViTBackbone
 
 # Registry =>> Supported CLIP Vision Backbones (from TIMM)
 CLIP_VISION_BACKBONES = {
-    "clip-vit-b": "vit_base_patch16_clip_224.openai",
-    "clip-vit-l": "vit_large_patch14_clip_224.openai",
-    "clip-vit-l-336px": "vit_large_patch14_clip_336.openai",
+    "clip-vit-b": "/home/v-shuhuairen/mycontainer/ckpt/official_ckpts/vit_base_patch16_clip_224.openai",
+    "clip-vit-l": "/home/v-shuhuairen/mycontainer/ckpt/official_ckpts/vit_large_patch14_clip_224.openai",
+    "clip-vit-l-336px": "/home/v-shuhuairen/mycontainer/ckpt/official_ckpts/vit_large_patch14_clip_336.openai",
 }
 
 

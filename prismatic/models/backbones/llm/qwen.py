@@ -16,10 +16,10 @@ from prismatic.models.backbones.llm.prompting import Qwen2PromptBuilder
 # fmt: off
 QWEN2_MODELS = {
     "qwen-v15-0.5b-chat": {
-        "llm_family": "qwenv15", "llm_cls": Qwen2ForCausalLM, "hf_hub_path": "/home/yaolinli/code/official_ckpts/Qwen1.5-0.5B-Chat"
+        "llm_family": "qwenv15", "llm_cls": Qwen2ForCausalLM, "hf_hub_path": "/home/v-shuhuairen/mycontainer/ckpt/official_ckpts/Qwen1.5-0.5B-Chat"
     },
     "qwen-v15-1.8b-chat": {
-        "llm_family": "qwenv15", "llm_cls": Qwen2ForCausalLM, "hf_hub_path": "/home/yaolinli/code/official_ckpts/Qwen1.5-1.8B-Chat"
+        "llm_family": "qwenv15", "llm_cls": Qwen2ForCausalLM, "hf_hub_path": "/home/v-shuhuairen/mycontainer/ckpt/official_ckpts/Qwen1.5-1.8B-Chat"
     },
     "qwen-v15-7b": {
         "llm_family": "qwenv15", "llm_cls": Qwen2ForCausalLM, "hf_hub_path": "Qwen/Qwen1.5-7B-Chat"

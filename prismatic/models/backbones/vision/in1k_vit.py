@@ -7,7 +7,7 @@ from prismatic.models.backbones.vision.base_vision import TimmViTBackbone
 
 # Registry =>> Supported Vision Backbones (from TIMM)
 IN1K_VISION_BACKBONES = {
-    "in1k-vit-l": "vit_large_patch16_224.augreg_in21k_ft_in1k",
+    "in1k-vit-l": "/home/v-shuhuairen/mycontainer/ckpt/official_ckpts/vit_large_patch16_224.augreg_in21k_ft_in1k",
 }
 
 

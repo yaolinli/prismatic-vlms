@@ -19,8 +19,8 @@ from prismatic.models.backbones.vision.base_vision import ImageTransform, Letter
 # Registry =>> Supported DinoCLIP Pairs (as TIMM identifiers)
 DINOCLIP_VISION_BACKBONES = {
     "dinoclip-vit-l-336px": {
-        "dino": "vit_large_patch14_reg4_dinov2.lvd142m",
-        "clip": "vit_large_patch14_clip_336.openai",
+        "dino": "/home/v-shuhuairen/mycontainer/ckpt/official_ckpts/vit_large_patch14_reg4_dinov2.lvd142m",
+        "clip": "/home/v-shuhuairen/mycontainer/ckpt/official_ckpts/vit_large_patch14_clip_336.openai",
     },
 }
 

@@ -16,7 +16,7 @@ from prismatic.models.backbones.llm.prompting import Phi2PromptBuilder
 # fmt: off
 PHI2_MODELS = {
     "phi2": {
-        "llm_family": "phiv2", "llm_cls": PhiForCausalLM, "hf_hub_path": "/home/yaolinli/code/official_ckpts/phi-2"
+        "llm_family": "phiv2", "llm_cls": PhiForCausalLM, "hf_hub_path": "/home/v-shuhuairen/mycontainer/ckpt/official_ckpts/phi-2"
     },
 }
 # fmt: on

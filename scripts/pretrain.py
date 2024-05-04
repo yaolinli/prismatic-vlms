@@ -37,6 +37,9 @@ from prismatic.overwatch import initialize_overwatch
 from prismatic.preprocessing import get_dataset_and_collator
 from prismatic.training import Metrics, get_train_strategy
 from prismatic.util import set_global_seed
+import wandb
+wandb.login(key='d31c3d2fb877b78d1fc6b8dd2a2844edd083db46')
+
 
 # Disable Tokenizers Parallelism to Play Nice w/ PyTorch Multiprocessing DataLoaders
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
@@ -78,7 +81,7 @@ class PretrainConfig:
     trackers: Tuple[str, ...] = ("jsonl", "wandb")                  # Trackers to initialize (if W&B, add config!)
     # wandb_project: str = "prismatic"                                # Name of W&B project (default: `prismatic`)
     # wandb_entity: Optional[str] = None                              # Name of W&B entity (default: None)
-    wandb_project: str = "prism-vlms"
+    wandb_project: str = "avgpool-abla-exp"
     wandb_entity: Optional[str] = None
 
     def __post_init__(self) -> None:

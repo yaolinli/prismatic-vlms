@@ -118,7 +118,9 @@ class FinetuneDataset(Dataset[Dict[str, torch.Tensor]]):
         self.image_transform, self.tokenizer = image_transform, tokenizer
         self.prompt_builder_fn = prompt_builder_fn
         self.dataset_type = "finetune"
-        self.max_length = max_length
+        # self.max_length = max_length
+        self.max_length = self.tokenizer.model_max_length
+        print("finetune dataset max_length: ", self.max_length)
         # Load Instruct JSON
         with open(self.instruct_json, "r") as f:
             self.examples = json.load(f)
@@ -227,8 +229,9 @@ def get_hf_datasets(
     image_transform: ImageTransform,
     tokenizer: PreTrainedTokenizerBase,
     prompt_builder_fn: Type[PromptBuilder],
-    max_length: int = 1024,
+    # max_length: int = 1024,
 ):
+    max_length = tokenizer.model_max_length
     print("loading dataset...")
     print("instruct_json", instruct_json)
     dataset = load_dataset("json", data_files={"train": str(instruct_json)})

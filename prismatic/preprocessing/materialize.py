@@ -30,10 +30,11 @@ def get_dataset_and_collator_hf(
     prompt_builder_fn: Type[PromptBuilder],
     default_image_resolution: Tuple[int, int, int],
     padding_side: str = "right",
-    max_length=1024
+    max_length=1024,
 ) -> Tuple[Dataset, PaddedCollatorForLanguageModeling]:
     dataset_cls = DATASET_INITIALIZER[stage]
     dataset_root_dir = dataset_cfg.dataset_root_dir
+    max_length = tokenizer.model_max_length
     print("Max length", max_length)
     collator = PaddedCollatorForLanguageModeling(
         max_length, tokenizer.pad_token_id, default_image_resolution, padding_side=padding_side
@@ -86,6 +87,7 @@ def get_dataset_and_collator(
 ) -> Tuple[Dataset, PaddedCollatorForLanguageModeling]:
     dataset_cls = DATASET_INITIALIZER[stage]
     dataset_root_dir = dataset_cfg.dataset_root_dir
+    max_length = tokenizer.model_max_length
     print("Max length", max_length)
     collator = PaddedCollatorForLanguageModeling(
         max_length, tokenizer.pad_token_id, default_image_resolution, padding_side=padding_side

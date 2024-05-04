@@ -16,7 +16,7 @@ CUDA_VISIBLE_DEVICES=$gpu_id torchrun --standalone --nnodes 1 --nproc-per-node $
   --model.vision_backbone_id $vision_backbone \
   --model.image_resize_strategy $resize_strategy \
   --model.arch_specifier 'no-align+'$projector \
-  --model.llm_backbone_id $model_name  --run_id "one-stage_"${model_name}"+"${projector} --model.finetune_per_device_batch_size 2 --run_root_dir $run_root_dir
+  --model.llm_backbone_id $model_name  --run_id "one-stage_"${model_name}"+"${projector} --model.finetune_per_device_batch_size 2 --run_root_dir $run_root_dir --model.llm_max_length 1024
 
 
 #####################################
@@ -38,7 +38,7 @@ do
         --model.model_id "one-stage_"${model_name}"+"${vision_backbone}"+"${projector} \
         --model.vision_backbone_id $vision_backbone \
         --model.image_resize_strategy $resize_strategy \
-        --model.llm_backbone_id $model_name  --run_id "one-stage_"${model_name}"+"${vision_backbone}"+"${projector} --model.arch_specifier 'no-align+'$projector --model.finetune_per_device_batch_size 2 --run_root_dir $run_root_dir
+        --model.llm_backbone_id $model_name  --run_id "one-stage_"${model_name}"+"${vision_backbone}"+"${projector} --model.arch_specifier 'no-align+'$projector --model.finetune_per_device_batch_size 2 --run_root_dir $run_root_dir --model.llm_max_length 1024
     done
 done
 
@@ -46,8 +46,6 @@ done
 ##    E2: llava-v15-7B exps     #
 #################################
 # 1) make sure model exists: /home/v-shuhuairen/mycontainer/ckpt/official_ckpts/vicuna-7b-v1.5
-# 2) reset max_length 1024 -> 2048:
-# ./prismatic-vlms/prismatic/preprocessing/datasets/datasets.py:  replace 1024 -> 2048
 
 
 # e1: clip-vit-l-336px + vicuna-v15-7b + 2*gelu-mlp

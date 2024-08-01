@@ -15,15 +15,15 @@ projector='gelu-mlp'
 
 CUDA_VISIBLE_DEVICES=$gpu_id torchrun --standalone --nnodes 1 --nproc-per-node $gpu_num scripts/pretrain.py \
   --model.type "reproduction-llava-v15+7b" \
-  --model.model_id "one-stage_"${model_name} \
+  --model.model_id "one-stage_"${model_name}"+"${vision_backbone}"+"${projector} \
   --model.vision_backbone_id $vision_backbone \
   --model.image_resize_strategy $resize_strategy \
   --model.arch_specifier 'no-align+'$projector \
-  --model.llm_backbone_id $model_name  --run_id "one-stage_"${model_name}"+"${projector} --model.finetune_per_device_batch_size $finetune_per_device_batch_size --run_root_dir $run_root_dir --model.llm_max_length 1024
+  --model.llm_backbone_id $model_name  --run_id "one-stage_"${model_name}"+"${vision_backbone}"+"${projector} --model.finetune_per_device_batch_size $finetune_per_device_batch_size --run_root_dir $run_root_dir --model.llm_max_length 1024
 
 
 #####################################
-##    E3: siglip 384 | 729->144     #
+##    E2: siglip 384 | 729->144     #
 #####################################
 model_name='phi2'
 vision_backbone='siglip-vit-so400m-384px'
@@ -32,15 +32,15 @@ projector='gelu-mlp'
 
 CUDA_VISIBLE_DEVICES=$gpu_id torchrun --standalone --nnodes 1 --nproc-per-node $gpu_num scripts/pretrain.py \
   --model.type "reproduction-llava-v15+7b" \
-  --model.model_id "one-stage_"${model_name} \
+  --model.model_id "one-stage_"${model_name}"+"${vision_backbone}"+"${projector} \
   --model.vision_backbone_id $vision_backbone \
   --model.image_resize_strategy $resize_strategy \
   --model.arch_specifier 'no-align+'$projector \
-  --model.llm_backbone_id $model_name  --run_id "one-stage_"${model_name}"+"${projector} --model.finetune_per_device_batch_size $finetune_per_device_batch_size --run_root_dir $run_root_dir --model.llm_max_length 1024
+  --model.llm_backbone_id $model_name  --run_id "one-stage_"${model_name}"+"${vision_backbone}"+"${projector} --model.finetune_per_device_batch_size $finetune_per_device_batch_size --run_root_dir $run_root_dir --model.llm_max_length 1024
 
 
-  #####################################
-##    E2: clip 336 | 576->144     #
+#####################################
+##    E3: clip 336 | 576->144     #
 #####################################
 model_name='phi2'
 vision_backbone='clip-vit-l-336px'
@@ -49,8 +49,8 @@ projector='gelu-mlp'
 
 CUDA_VISIBLE_DEVICES=$gpu_id torchrun --standalone --nnodes 1 --nproc-per-node $gpu_num scripts/pretrain.py \
   --model.type "reproduction-llava-v15+7b" \
-  --model.model_id "one-stage_"${model_name} \
+  --model.model_id "one-stage_"${model_name}"+"${vision_backbone}"+"${projector} \
   --model.vision_backbone_id $vision_backbone \
   --model.image_resize_strategy $resize_strategy \
   --model.arch_specifier 'no-align+'$projector \
-  --model.llm_backbone_id $model_name  --run_id "one-stage_"${model_name}"+"${projector} --model.finetune_per_device_batch_size $finetune_per_device_batch_size --run_root_dir $run_root_dir --model.llm_max_length 1024
+  --model.llm_backbone_id $model_name  --run_id "one-stage_"${model_name}"+"${vision_backbone}"+"${projector} --model.finetune_per_device_batch_size $finetune_per_device_batch_size --run_root_dir $run_root_dir --model.llm_max_length 1024
